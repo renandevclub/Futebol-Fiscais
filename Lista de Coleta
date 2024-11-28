@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exibição da Planilha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet"> <!-- Fonte esportiva -->
+    <style>
+        /* Estilo geral da página */
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            flex-direction: column;
+            background-color: transparent; /* Fundo transparente */
+        }
+
+        /* Estilo para o título */
+        h1 {
+            color: white; /* Cor do título para branco */
+            font-size: 5rem;
+            margin: 10px 0;
+            text-align: center;
+            animation: pulse 1.5s infinite;
+            background: transparent; /* Fundo do título transparente */
+        }
+
+        /* Animação de pulsação para o título */
+        @keyframes pulse {
+            0%, 200% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Estilo para o iframe */
+        iframe {
+            width: 80%;
+            max-width: 700px;
+            height: 650px; /* Altura ajustada da planilha */
+            background-color: transparent; /* Fundo do iframe transparente */
+            border-radius: 10px; /* Bordas arredondadas no iframe */
+            border: 2px solid #ddd; /* Borda ao redor do iframe */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para realçar */
+        }
+
+        /* Estilo do botão de download */
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+            background-color: rgba(76, 175, 80, 0.8); /* Fundo semi-transparente */
+        }
+
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Centralizar o conteúdo */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-radius: 20px; /* Bordas arredondadas no container */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            background-color: transparent; /* Fundo do container transparente */
+        }
+
+        /* Estilo para o botão de download estar abaixo da tabela */
+        .download-section {
+            margin-top: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Título da página com animação de pulsação -->
+    <h1>Coleta</h1>
+
+    <!-- Container que envolve o iframe -->
+    <div class="container">
+        <!-- Iframe que exibe a planilha sem cabeçalho e sem rodapé -->
+        <iframe src="https://docs.google.com/spreadsheets/d/1kdVk2_YRqDOO6CLd1oEKBAdhrmGzI0JUI3Hp6gmiqZg/pubhtml?widget=true&headers=false&chrome=false"></iframe>
+        
+        <!-- Seção para o botão de download, logo abaixo da tabela -->
+        <div class="download-section">
+            <!-- Botão de download para PDF -->
+            <a href="https://docs.google.com/spreadsheets/d/1kdVk2_YRqDOO6CLd1oEKBAdhrmGzI0JUI3Hp6gmiqZg/export?format=pdf" target="_blank">
+                <button class="download-btn">Download em PDF</button>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
