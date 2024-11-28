@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convocação para o Jogo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background-image: url('https://i.postimg.cc/KvHw7wZR/93da914e-e94e-4e7d-8815-f9ec45f1e8d4.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente */
+      border-radius: 10px;
+    }
+
+    h1 {
+      color: #FFD700; /* Dourado para destaque */
+      margin-bottom: 10px;
+      text-align: center; /* Centraliza o título */
+    }
+
+    p {
+      color: #ddd;
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 10px 30px;
+      background-color: #FFD700; /* Dourado */
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 30px;
+    }
+
+    button:hover {
+      background-color: #ffc107;
+    }
+    
+    a button {
+      margin-bottom: 40px; /* Espaçamento maior entre botão e cronômetro */
+    }
+
+    .titulo-times {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      color: #FFD700; /* Dourado */
+    }
+
+    .cronometro-container {
+      background-color: rgba(255, 255, 255, 0.8); /* Fundo semi-transparente */
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .cronometro {
+      font-size: 36px;
+      font-weight: bold;
+      animation: blink 1s step-end infinite;
+      background: #4CAF50;
+      color: white;
+      padding: 20px 30px;
+      border-radius: 10px;
+    }
+
+    .data-jogo {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    .localizacao {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.8); /* Fundo semi-transparente */
+      border-radius: 10px;
+    }
+
+    .localizacao svg {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .localizacao a {
+      text-decoration: none;
+      color: #007BFF;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: bold;
+    }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+      .cronometro {
+        font-size: 28px;
+      }
+
+      .localizacao svg {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Convocação -->
+    <h1>⚽ Você Está Sendo Convocado ⚽</h1>
+    <div class="titulo-times">Embaladores vs Fiscais</div>
+    <p>Data: <strong>28 de novembro de 2024</strong></p>
+    <p>Horário: <strong>23:00</strong></p>
+    <p>Local: <strong>Arena Prime Fut7</strong></p>
+    <p>Traga suas habilidades kkk ou pelo menos sua sorte!</p>
+
+    <!-- Botão para confirmar presença -->
+    <a href="https://sites.google.com/view/futeboldosfiscais/Efetuar-Pagamento?authuser=0" target="_blank">
+      <button id="confirmar-presenca">Confirmar Presença</button>
+    </a>
+
+    <!-- Cronômetro -->
+    <div class="cronometro-container">
+      <div id="cronometro-jogo" class="cronometro">00:00:00</div>
+      <div class="data-jogo">Data: 28 de Novembro de 2024 às 23:00</div>
+    </div>
+
+    <!-- Localização -->
+    <div class="localizacao">
+      <div style="display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#007BFF">
+          <path d="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+        </svg>
+        <a href="https://www.google.com/maps/place/Av.+Eng.+Fernando+Guilhon+C%2F+General%C3%ADssimo+Deodoro-1691,+Crema%C3%A7%C3%A3o,+Bel%C3%A9m+-+PA" 
+     target="_blank">
+          Av. Eng. Fernando Guilhon C/ Generalíssimo Deodoro-1691, Cremação, Belém - PA
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuração do cronômetro
+    const dataJogo = new Date("November 28, 2024 23:00:00").getTime();
+
+    const cronometroJogo = setInterval(function() {
+      const agora = new Date().getTime();
+      const distancia = dataJogo - agora;
+
+      if (distancia < 0) {
+        clearInterval(cronometroJogo);
+        document.getElementById("cronometro-jogo").innerHTML = "O Jogo Começou!";
+      } else {
+        const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+        document.getElementById("cronometro-jogo").innerHTML = 
+          dias + "d " + horas + "h " + minutos + "m " + segundos + "s ";
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
