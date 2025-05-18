@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administração de Times</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    
+    .login-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .admin-container {
+      display: none;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #f1f1f1;
+      border: none;
+      outline: none;
+      border-radius: 5px 5px 0 0;
+      margin-right: 5px;
+      transition: background-color 0.3s;
+    }
+    
+    .tab.active {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-bottom: 1px solid white;
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .times-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    .time {
+      flex: 1;
+      min-width: 250px;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .time-header {
+      text-align: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: white;
+    }
+    
+    .time-renan .time-header {
+      background-color: #e74c3c;
+    }
+    
+    .time-cristiano .time-header {
+      background-color: #333;
+    }
+    
+    .time-elton .time-header {
+      background-color: #3498db;
+    }
+    
+    .jogador {
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f9f9f9;
+      border-radius: 3px;
+      border-left: 3px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .vaga-disponivel {
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f9f9f9;
+      border-radius: 3px;
+      border-left: 3px solid #ddd;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    .update-button {
+      background-color: #2196F3;
+      margin-bottom: 20px;
+    }
+    
+    .update-button:hover {
+      background-color: #0b7dda;
+    }
+    
+    .clear-button {
+      background-color: #f44336;
+      margin-top: 20px;
+    }
+    
+    .clear-button:hover {
+      background-color: #d32f2f;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .edit-button {
+      background-color: #2196F3;
+      padding: 5px 10px;
+      font-size: 12px;
+      width: auto;
+    }
+    
+    .remove-button {
+      background-color: #f44336;
+      padding: 5px 10px;
+      font-size: 12px;
+      width: auto;
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      margin-top: 10px;
+      text-align: center;
+    }
+    
+    .success-message {
+      color: #2ecc71;
+      margin-top: 10px;
+      text-align: center;
+    }
+    
+    .loading {
+      text-align: center;
+      margin: 20px 0;
+      font-style: italic;
+      color: #666;
+    }
+    
+    .timestamp {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .back-link a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+    
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 300px;
+      border-radius: 5px;
+    }
+    
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+    
+    @media (max-width: 768px) {
+      .times-container {
+        flex-direction: column;
+      }
+      
+      .time {
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Administração de Times</h1>
+    
+    <div id="login-container" class="login-container">
+      <h2>Digite a senha de administrador para acessar o painel:</h2>
+      <div class="form-group">
+        <input type="password" id="admin-password" placeholder="Senha de administrador">
+      </div>
+      <button id="login-button">Entrar</button>
+      <div id="login-error" class="error-message"></div>
+      
+      <div class="back-link">
+        <a href="index.html">← Voltar para a página pública</a>
+      </div>
+    </div>
+    
+    <div id="admin-container" class="admin-container">
+      <div class="tabs">
+        <button class="tab active" onclick="openTab('gerenciar')">Gerenciar Times</button>
+        <button class="tab" onclick="openTab('adicionar')">Adicionar Jogador</button>
+      </div>
+      
+      <div id="gerenciar" class="tab-content active">
+        <h2>Gerenciar Times</h2>
+        <button id="atualizar-times" class="update-button">Atualizar Times</button>
+        
+        <div class="times-container">
+          <div class="time time-renan">
+            <div class="time-header">🔴 Time Renan</div>
+            <div id="jogadores-renan">
+              <div class="loading">Carregando jogadores...</div>
+            </div>
+          </div>
+          
+          <div class="time time-cristiano">
+            <div class="time-header">⚫ Time Cristiano</div>
+            <div id="jogadores-cristiano">
+              <div class="loading">Carregando jogadores...</div>
+            </div>
+          </div>
+          
+          <div class="time time-elton">
+            <div class="time-header">🔵 Time Elton</div>
+            <div id="jogadores-elton">
+              <div class="loading">Carregando jogadores...</div>
+            </div>
+          </div>
+        </div>
+        
+        <button id="limpar-times" class="clear-button">Limpar Todos os Times</button>
+        
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+        <div class="timestamp" id="timestamp"></div>
+      </div>
+      
+      <div id="adicionar" class="tab-content">
+        <h2>Adicionar Jogador</h2>
+        <p>Adicione um jogador diretamente a um dos times.</p>
+        
+        <div class="form-group">
+          <label for="nome-jogador">Nome do Jogador:</label>
+          <input type="text" id="nome-jogador" placeholder="Digite o nome do jogador">
+        </div>
+        
+        <div class="form-group">
+          <label for="time-jogador">Time:</label>
+          <select id="time-jogador">
+            <option value="Renan">Time Renan</option>
+            <option value="Cristiano">Time Cristiano</option>
+            <option value="Elton">Time Elton</option>
+          </select>
+        </div>
+        
+        <button id="adicionar-jogador">Adicionar Jogador</button>
+        
+        <div id="error-message-adicionar" class="error-message"></div>
+        <div id="success-message-adicionar" class="success-message"></div>
+      </div>
+      
+      <div class="back-link">
+        <a href="index.html">← Voltar para a página pública</a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal de Edição -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Editar Jogador</h3>
+      <div class="form-group">
+        <label for="edit-nome">Novo Nome:</label>
+        <input type="text" id="edit-nome" placeholder="Digite o novo nome">
+      </div>
+      <button id="salvar-edicao">Salvar</button>
+      <div id="error-message-edit" class="error-message"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Variáveis globais
+    const API_URL = '/api';
+    let timesData = null;
+    let adminPassword = '';
+    let editingPlayer = { time: '', index: -1 };
+    
+    // Função para abrir abas
+    function openTab(tabName) {
+      const tabs = document.getElementsByClassName('tab');
+      const tabContents = document.getElementsByClassName('tab-content');
+      
+      for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+      }
+      
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+      }
+      
+      document.getElementById(tabName).classList.add('active');
+      document.querySelector(`.tab[onclick="openTab('${tabName}')"]`).classList.add('active');
+      
+      // Se abrir a aba de gerenciar, carregar os times
+      if (tabName === 'gerenciar') {
+        carregarTimes();
+      }
+    }
+    
+    // Função para fazer login
+    async function fazerLogin() {
+      const passwordInput = document.getElementById('admin-password');
+      const loginError = document.getElementById('login-error');
+      
+      adminPassword = passwordInput.value.trim();
+      
+      if (!adminPassword) {
+        loginError.textContent = 'Por favor, digite a senha de administrador.';
+        return;
+      }
+      
+      // Mostrar o painel de administração
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('admin-container').style.display = 'block';
+      
+      // Carregar os times
+      carregarTimes();
+    }
+    
+    // Função para carregar os times
+    async function carregarTimes() {
+      const jogadoresRenan = document.getElementById('jogadores-renan');
+      const jogadoresCristiano = document.getElementById('jogadores-cristiano');
+      const jogadoresElton = document.getElementById('jogadores-elton');
+      const errorMessage = document.getElementById('error-message');
+      const timestamp = document.getElementById('timestamp');
+      
+      if (jogadoresRenan) jogadoresRenan.innerHTML = '<div class="loading">Carregando jogadores...</div>';
+      if (jogadoresCristiano) jogadoresCristiano.innerHTML = '<div class="loading">Carregando jogadores...</div>';
+      if (jogadoresElton) jogadoresElton.innerHTML = '<div class="loading">Carregando jogadores...</div>';
+      if (errorMessage) errorMessage.textContent = '';
+      
+      try {
+        console.log('Carregando times de:', API_URL);
+        const response = await fetch(API_URL);
+        
+        if (!response.ok) {
+          throw new Error(`Erro ao carregar os times: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('Dados recebidos:', data);
+        timesData = data;
+        
+        if (!jogadoresRenan) return; // Se não estiver na aba de gerenciar
+        
+        // Renderizar Time Renan
+        jogadoresRenan.innerHTML = '';
+        data.timeRenan.forEach((jogador, index) => {
+          const jogadorElement = document.createElement('div');
+          if (jogador) {
+            jogadorElement.className = 'jogador';
+            
+            const nomeSpan = document.createElement('span');
+            nomeSpan.textContent = jogador;
+            
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+            
+            const editButton = document.createElement('button');
+            editButton.className = 'edit-button';
+            editButton.textContent = 'Editar';
+            editButton.onclick = () => abrirModalEdicao('Renan', index, jogador);
+            
+            const removeButton = document.createElement('button');
+            removeButton.className = 'remove-button';
+            removeButton.textContent = 'Remover';
+            removeButton.onclick = () => removerJogador('Renan', index);
+            
+            actionButtons.appendChild(editButton);
+            actionButtons.appendChild(removeButton);
+            
+            jogadorElement.appendChild(nomeSpan);
+            jogadorElement.appendChild(actionButtons);
+          } else {
+            jogadorElement.className = 'vaga-disponivel';
+            jogadorElement.textContent = 'Vaga disponível';
+          }
+          jogadoresRenan.appendChild(jogadorElement);
+        });
+        
+        // Renderizar Time Cristiano
+        jogadoresCristiano.innerHTML = '';
+        data.timeCristiano.forEach((jogador, index) => {
+          const jogadorElement = document.createElement('div');
+          if (jogador) {
+            jogadorElement.className = 'jogador';
+            
+            const nomeSpan = document.createElement('span');
+            nomeSpan.textContent = jogador;
+            
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+            
+            const editButton = document.createElement('button');
+            editButton.className = 'edit-button';
+            editButton.textContent = 'Editar';
+            editButton.onclick = () => abrirModalEdicao('Cristiano', index, jogador);
+            
+            const removeButton = document.createElement('button');
+            removeButton.className = 'remove-button';
+            removeButton.textContent = 'Remover';
+            removeButton.onclick = () => removerJogador('Cristiano', index);
+            
+            actionButtons.appendChild(editButton);
+            actionButtons.appendChild(removeButton);
+            
+            jogadorElement.appendChild(nomeSpan);
+            jogadorElement.appendChild(actionButtons);
+          } else {
+            jogadorElement.className = 'vaga-disponivel';
+            jogadorElement.textContent = 'Vaga disponível';
+          }
+          jogadoresCristiano.appendChild(jogadorElement);
+        });
+        
+        // Renderizar Time Elton
+        jogadoresElton.innerHTML = '';
+        data.timeElton.forEach((jogador, index) => {
+          const jogadorElement = document.createElement('div');
+          if (jogador) {
+            jogadorElement.className = 'jogador';
+            
+            const nomeSpan = document.createElement('span');
+            nomeSpan.textContent = jogador;
+            
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+            
+            const editButton = document.createElement('button');
+            editButton.className = 'edit-button';
+            editButton.textContent = 'Editar';
+            editButton.onclick = () => abrirModalEdicao('Elton', index, jogador);
+            
+            const removeButton = document.createElement('button');
+            removeButton.className = 'remove-button';
+            removeButton.textContent = 'Remover';
+            removeButton.onclick = () => removerJogador('Elton', index);
+            
+            actionButtons.appendChild(editButton);
+            actionButtons.appendChild(removeButton);
+            
+            jogadorElement.appendChild(nomeSpan);
+            jogadorElement.appendChild(actionButtons);
+          } else {
+            jogadorElement.className = 'vaga-disponivel';
+            jogadorElement.textContent = 'Vaga disponível';
+          }
+          jogadoresElton.appendChild(jogadorElement);
+        });
+        
+        // Atualizar timestamp
+        if (timestamp) {
+          const now = new Date();
+          timestamp.textContent = `Última atualização: ${now.toLocaleTimeString()}`;
+        }
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        
+        if (errorMessage) {
+          errorMessage.textContent = `Erro ao carregar os times: ${error.message}`;
+        }
+        
+        if (jogadoresRenan) jogadoresRenan.innerHTML = '<div class="vaga-disponivel">Erro ao carregar jogadores</div>';
+        if (jogadoresCristiano) jogadoresCristiano.innerHTML = '<div class="vaga-disponivel">Erro ao carregar jogadores</div>';
+        if (jogadoresElton) jogadoresElton.innerHTML = '<div class="vaga-disponivel">Erro ao carregar jogadores</div>';
+      }
+    }
+    
+    // Função para adicionar jogador
+    async function adicionarJogador() {
+      const nomeJogador = document.getElementById('nome-jogador').value.trim();
+      const timeJogador = document.getElementById('time-jogador').value;
+      const errorMessageAdicionar = document.getElementById('error-message-adicionar');
+      const successMessageAdicionar = document.getElementById('success-message-adicionar');
+      
+      // Validar nome
+      if (!nomeJogador) {
+        errorMessageAdicionar.textContent = 'Por favor, digite o nome do jogador.';
+        successMessageAdicionar.textContent = '';
+        return;
+      }
+      
+      // Limpar mensagens
+      errorMessageAdicionar.textContent = '';
+      successMessageAdicionar.textContent = '';
+      
+      try {
+        console.log('Enviando adição para:', `${API_URL}/adicionar-jogador`);
+        console.log('Dados:', { nome: nomeJogador, time: timeJogador, adminPassword });
+        
+        const response = await fetch(`${API_URL}/adicionar-jogador`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nome: nomeJogador,
+            time: timeJogador,
+            adminPassword: adminPassword
+          })
+        });
+        
+        const data = await response.json();
+        console.log('Resposta da adição:', data);
+        
+        if (data.status === 'error') {
+          errorMessageAdicionar.textContent = data.message;
+          return;
+        }
+        
+        // Exibir mensagem de sucesso
+        successMessageAdicionar.textContent = data.message;
+        
+        // Limpar o campo de nome
+        document.getElementById('nome-jogador').value = '';
+        
+        // Recarregar os times se estiver na aba de gerenciar
+        if (document.getElementById('gerenciar').classList.contains('active')) {
+          carregarTimes();
+        }
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        errorMessageAdicionar.textContent = `Erro ao adicionar jogador: ${error.message}`;
+      }
+    }
+    
+    // Função para abrir modal de edição
+    function abrirModalEdicao(time, index, nome) {
+      const modal = document.getElementById('edit-modal');
+      const nomeInput = document.getElementById('edit-nome');
+      const errorMessageEdit = document.getElementById('error-message-edit');
+      
+      // Limpar mensagens de erro
+      errorMessageEdit.textContent = '';
+      
+      // Preencher o campo com o nome atual
+      nomeInput.value = nome;
+      
+      // Armazenar informações do jogador sendo editado
+      editingPlayer = { time, index };
+      
+      // Exibir o modal
+      modal.style.display = 'block';
+    }
+    
+    // Função para salvar edição
+    async function salvarEdicao() {
+      const novoNome = document.getElementById('edit-nome').value.trim();
+      const errorMessageEdit = document.getElementById('error-message-edit');
+      const successMessage = document.getElementById('success-message');
+      
+      // Validar nome
+      if (!novoNome) {
+        errorMessageEdit.textContent = 'Por favor, digite o novo nome.';
+        return;
+      }
+      
+      // Limpar mensagens
+      errorMessageEdit.textContent = '';
+      
+      try {
+        console.log('Enviando edição para:', `${API_URL}/editar-jogador`);
+        console.log('Dados:', { time: editingPlayer.time, index: editingPlayer.index, novoNome, adminPassword });
+        
+        const response = await fetch(`${API_URL}/editar-jogador`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            time: editingPlayer.time,
+            index: editingPlayer.index,
+            novoNome: novoNome,
+            adminPassword: adminPassword
+          })
+        });
+        
+        const data = await response.json();
+        console.log('Resposta da edição:', data);
+        
+        if (data.status === 'error') {
+          errorMessageEdit.textContent = data.message;
+          return;
+        }
+        
+        // Fechar o modal
+        document.getElementById('edit-modal').style.display = 'none';
+        
+        // Exibir mensagem de sucesso
+        successMessage.textContent = data.message;
+        
+        // Recarregar os times
+        carregarTimes();
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        errorMessageEdit.textContent = `Erro ao editar jogador: ${error.message}`;
+      }
+    }
+    
+    // Função para remover jogador
+    async function removerJogador(time, index) {
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      
+      // Confirmar remoção
+      if (!confirm(`Tem certeza que deseja remover este jogador do Time ${time}?`)) {
+        return;
+      }
+      
+      // Limpar mensagens
+      errorMessage.textContent = '';
+      successMessage.textContent = '';
+      
+      try {
+        console.log('Enviando remoção para:', `${API_URL}/remover-jogador`);
+        console.log('Dados:', { time, index, adminPassword });
+        
+        const response = await fetch(`${API_URL}/remover-jogador`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            time: time,
+            index: index,
+            adminPassword: adminPassword
+          })
+        });
+        
+        const data = await response.json();
+        console.log('Resposta da remoção:', data);
+        
+        if (data.status === 'error') {
+          errorMessage.textContent = data.message;
+          return;
+        }
+        
+        // Exibir mensagem de sucesso
+        successMessage.textContent = data.message;
+        
+        // Recarregar os times
+        carregarTimes();
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        errorMessage.textContent = `Erro ao remover jogador: ${error.message}`;
+      }
+    }
+    
+    // Função para limpar todos os times
+    async function limparTimes() {
+      const errorMessage = document.getElementById('error-message');
+      const successMessage = document.getElementById('success-message');
+      
+      // Confirmar limpeza
+      if (!confirm('Tem certeza que deseja limpar TODOS os times? Esta ação não pode ser desfeita!')) {
+        return;
+      }
+      
+      // Limpar mensagens
+      errorMessage.textContent = '';
+      successMessage.textContent = '';
+      
+      try {
+        console.log('Enviando limpeza para:', `${API_URL}/limpar-times`);
+        console.log('Dados:', { adminPassword });
+        
+        const response = await fetch(`${API_URL}/limpar-times`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            adminPassword: adminPassword
+          })
+        });
+        
+        const data = await response.json();
+        console.log('Resposta da limpeza:', data);
+        
+        if (data.status === 'error') {
+          errorMessage.textContent = data.message;
+          return;
+        }
+        
+        // Exibir mensagem de sucesso
+        successMessage.textContent = data.message;
+        
+        // Recarregar os times
+        carregarTimes();
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        errorMessage.textContent = `Erro ao limpar os times: ${error.message}`;
+      }
+    }
+    
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Página de administração carregada, inicializando...');
+      
+      // Botão de login
+      document.getElementById('login-button').addEventListener('click', fazerLogin);
+      
+      // Permitir login com Enter
+      document.getElementById('admin-password').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          fazerLogin();
+        }
+      });
+      
+      // Botão de atualizar times
+      document.getElementById('atualizar-times').addEventListener('click', carregarTimes);
+      
+      // Botão de adicionar jogador
+      document.getElementById('adicionar-jogador').addEventListener('click', adicionarJogador);
+      
+      // Botão de limpar times
+      document.getElementById('limpar-times').addEventListener('click', limparTimes);
+      
+      // Botão de salvar edição
+      document.getElementById('salvar-edicao').addEventListener('click', salvarEdicao);
+      
+      // Fechar modal ao clicar no X
+      document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('edit-modal').style.display = 'none';
+      });
+      
+      // Fechar modal ao clicar fora dele
+      window.addEventListener('click', function(event) {
+        const modal = document.getElementById('edit-modal');
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

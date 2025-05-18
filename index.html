@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteio e Visualização de Times</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #f1f1f1;
+      border: none;
+      outline: none;
+      border-radius: 5px 5px 0 0;
+      margin-right: 5px;
+      transition: background-color 0.3s;
+    }
+    
+    .tab.active {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-bottom: 1px solid white;
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .times-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    .time {
+      flex: 1;
+      min-width: 250px;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .time-header {
+      text-align: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: white;
+    }
+    
+    .time-renan .time-header {
+      background-color: #e74c3c;
+    }
+    
+    .time-cristiano .time-header {
+      background-color: #333;
+    }
+    
+    .time-elton .time-header {
+      background-color: #3498db;
+    }
+    
+    .jogador {
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f9f9f9;
+      border-radius: 3px;
+      border-left: 3px solid #ddd;
+    }
+    
+    .vaga-disponivel {
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f9f9f9;
+      border-radius: 3px;
+      border-left: 3px solid #ddd;
+      color: #999;
+      font-style: italic;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    .update-button {
+      background-color: #2196F3;
+      margin-bottom: 20px;
+    }
+    
+    .update-button:hover {
+      background-color: #0b7dda;
+    }
+    
+    .resultado {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: center;
+      display: none;
+    }
+    
+    .resultado.time-renan {
+      background-color: #ffebee;
+      border: 1px solid #e74c3c;
+    }
+    
+    .resultado.time-cristiano {
+      background-color: #f5f5f5;
+      border: 1px solid #333;
+    }
+    
+    .resultado.time-elton {
+      background-color: #e3f2fd;
+      border: 1px solid #3498db;
+    }
+    
+    .resultado h3 {
+      margin-top: 0;
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      margin-top: 10px;
+      text-align: center;
+    }
+    
+    .success-message {
+      color: #2ecc71;
+      margin-top: 10px;
+      text-align: center;
+    }
+    
+    .loading {
+      text-align: center;
+      margin: 20px 0;
+      font-style: italic;
+      color: #666;
+    }
+    
+    .timestamp {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .admin-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .admin-link a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    
+    .admin-link a:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .times-container {
+        flex-direction: column;
+      }
+      
+      .time {
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sorteio e Visualização de Times</h1>
+    
+    <div class="tabs">
+      <button class="tab active" onclick="openTab('visualizar')">Visualizar Times</button>
+      <button class="tab" onclick="openTab('sortear')">Participar do Sorteio</button>
+    </div>
+    
+    <div id="visualizar" class="tab-content active">
+      <h2>Times Atuais</h2>
+      <button id="atualizar-times" class="update-button">Atualizar Times</button>
+      
+      <div class="times-container">
+        <div class="time time-renan">
+          <div class="time-header">🔴 Time Renan</div>
+          <div id="jogadores-renan">
+            <div class="loading">Carregando jogadores...</div>
+          </div>
+        </div>
+        
+        <div class="time time-cristiano">
+          <div class="time-header">⚫ Time Cristiano</div>
+          <div id="jogadores-cristiano">
+            <div class="loading">Carregando jogadores...</div>
+          </div>
+        </div>
+        
+        <div class="time time-elton">
+          <div class="time-header">🔵 Time Elton</div>
+          <div id="jogadores-elton">
+            <div class="loading">Carregando jogadores...</div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="error-message" class="error-message"></div>
+      <div class="timestamp" id="timestamp"></div>
+    </div>
+    
+    <div id="sortear" class="tab-content">
+      <h2>Participar do Sorteio</h2>
+      <p>Digite seu nome abaixo para participar do sorteio e ser adicionado a um dos times.</p>
+      
+      <div class="form-group">
+        <label for="nome-jogador">Seu Nome:</label>
+        <input type="text" id="nome-jogador" placeholder="Digite seu nome completo">
+      </div>
+      
+      <div class="form-group">
+        <label for="tipo-sorteio">Tipo de Sorteio:</label>
+        <select id="tipo-sorteio">
+          <option value="aleatorio">Aleatório (qualquer time)</option>
+          <option value="Renan">Time Renan</option>
+          <option value="Cristiano">Time Cristiano</option>
+          <option value="Elton">Time Elton</option>
+        </select>
+      </div>
+      
+      <button id="sortear-jogador">Participar do Sorteio</button>
+      
+      <div id="resultado-sorteio" class="resultado">
+        <h3>Resultado do Sorteio</h3>
+        <p id="mensagem-resultado"></p>
+      </div>
+      
+      <div id="error-message-sorteio" class="error-message"></div>
+      <div id="success-message-sorteio" class="success-message"></div>
+    </div>
+    
+    <div class="admin-link">
+      <a href="admin.html">Área do Administrador</a>
+    </div>
+  </div>
+  
+  <script>
+    // Variáveis globais
+    const API_URL = '/api';
+    let timesData = null;
+    
+    // Função para abrir abas
+    function openTab(tabName) {
+      const tabs = document.getElementsByClassName('tab');
+      const tabContents = document.getElementsByClassName('tab-content');
+      
+      for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+      }
+      
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+      }
+      
+      document.getElementById(tabName).classList.add('active');
+      document.querySelector(`.tab[onclick="openTab('${tabName}')"]`).classList.add('active');
+      
+      // Se abrir a aba de visualização, carregar os times
+      if (tabName === 'visualizar') {
+        carregarTimes();
+      }
+    }
+    
+    // Função para carregar os times
+    async function carregarTimes() {
+      const jogadoresRenan = document.getElementById('jogadores-renan');
+      const jogadoresCristiano = document.getElementById('jogadores-cristiano');
+      const jogadoresElton = document.getElementById('jogadores-elton');
+      const errorMessage = document.getElementById('error-message');
+      const timestamp = document.getElementById('timestamp');
+      
+      jogadoresRenan.innerHTML = '<div class="loading">Carregando jogadores...</div>';
+      jogadoresCristiano.innerHTML = '<div class="loading">Carregando jogadores...</div>';
+      jogadoresElton.innerHTML = '<div class="loading">Carregando jogadores...</div>';
+      errorMessage.textContent = '';
+      
+      try {
+        console.log('Carregando times de:', API_URL);
+        const response = await fetch(API_URL);
+        
+        if (!response.ok) {
+          throw new Error(`Erro ao carregar os times: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('Dados recebidos:', data);
+        timesData = data;
+        
+        // Renderizar Time Renan
+        jogadoresRenan.innerHTML = '';
+        data.timeRenan.forEach((jogador, index) => {
+          const jogadorElement = document.createElement('div');
+          if (jogador) {
+            jogadorElement.className = 'jogador';
+            jogadorElement.textContent = jogador;
+          } else {
+            jogadorElement.className = 'vaga-disponivel';
+            jogadorElement.textContent = 'Vaga disponível';
+          }
+          jogadoresRenan.appendChild(jogadorElement);
+        });
+        
+        // Renderizar Time Cristiano
+        jogadoresCristiano.innerHTML = '';
+        data.timeCristiano.forEach((jogador, index) => {
+          const jogadorElement = document.createElement('div');
+          if (jogador) {
+            jogadorElement.className = 'jogador';
+            jogadorElement.textContent = jogador;
+          } else {
+            jogadorElement.className = 'vaga-disponivel';
+            jogadorElement.textContent = 'Vaga disponível';
+          }
+          jogadoresCristiano.appendChild(jogadorElement);
+        });
+        
+        // Renderizar Time Elton
+        jogadoresElton.innerHTML = '';
+        data.timeElton.forEach((jogador, index) => {
+          const jogadorElement = document.createElement('div');
+          if (jogador) {
+            jogadorElement.className = 'jogador';
+            jogadorElement.textContent = jogador;
+          } else {
+            jogadorElement.className = 'vaga-disponivel';
+            jogadorElement.textContent = 'Vaga disponível';
+          }
+          jogadoresElton.appendChild(jogadorElement);
+        });
+        
+        // Atualizar timestamp
+        const now = new Date();
+        timestamp.textContent = `Última atualização: ${now.toLocaleTimeString()}`;
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        errorMessage.textContent = `Erro ao carregar os times: ${error.message}`;
+        
+        jogadoresRenan.innerHTML = '<div class="vaga-disponivel">Erro ao carregar jogadores</div>';
+        jogadoresCristiano.innerHTML = '<div class="vaga-disponivel">Erro ao carregar jogadores</div>';
+        jogadoresElton.innerHTML = '<div class="vaga-disponivel">Erro ao carregar jogadores</div>';
+      }
+    }
+    
+    // Função para sortear jogador
+    async function sortearJogador() {
+      const nomeJogador = document.getElementById('nome-jogador').value.trim();
+      const tipoSorteio = document.getElementById('tipo-sorteio').value;
+      const resultadoSorteio = document.getElementById('resultado-sorteio');
+      const mensagemResultado = document.getElementById('mensagem-resultado');
+      const errorMessageSorteio = document.getElementById('error-message-sorteio');
+      const successMessageSorteio = document.getElementById('success-message-sorteio');
+      
+      // Validar nome
+      if (!nomeJogador) {
+        errorMessageSorteio.textContent = 'Por favor, digite seu nome.';
+        successMessageSorteio.textContent = '';
+        resultadoSorteio.style.display = 'none';
+        return;
+      }
+      
+      // Limpar mensagens
+      errorMessageSorteio.textContent = '';
+      successMessageSorteio.textContent = '';
+      resultadoSorteio.style.display = 'none';
+      
+      try {
+        console.log('Enviando sorteio para:', `${API_URL}/sortear-jogador`);
+        console.log('Dados:', { nome: nomeJogador, tipoSorteio: tipoSorteio });
+        
+        const response = await fetch(`${API_URL}/sortear-jogador`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nome: nomeJogador,
+            tipoSorteio: tipoSorteio
+          })
+        });
+        
+        const data = await response.json();
+        console.log('Resposta do sorteio:', data);
+        
+        if (data.status === 'error') {
+          errorMessageSorteio.textContent = data.message;
+          return;
+        }
+        
+        // Exibir resultado do sorteio
+        resultadoSorteio.className = 'resultado';
+        
+        if (data.time === 'Renan') {
+          resultadoSorteio.classList.add('time-renan');
+          mensagemResultado.innerHTML = `<strong>Parabéns ${nomeJogador}!</strong><br>Você foi sorteado para o <strong>🔴 Time Renan</strong>`;
+        } else if (data.time === 'Cristiano') {
+          resultadoSorteio.classList.add('time-cristiano');
+          mensagemResultado.innerHTML = `<strong>Parabéns ${nomeJogador}!</strong><br>Você foi sorteado para o <strong>⚫ Time Cristiano</strong>`;
+        } else if (data.time === 'Elton') {
+          resultadoSorteio.classList.add('time-elton');
+          mensagemResultado.innerHTML = `<strong>Parabéns ${nomeJogador}!</strong><br>Você foi sorteado para o <strong>🔵 Time Elton</strong>`;
+        }
+        
+        resultadoSorteio.style.display = 'block';
+        successMessageSorteio.textContent = data.message;
+        
+        // Limpar o campo de nome
+        document.getElementById('nome-jogador').value = '';
+        
+        // Recarregar os times
+        carregarTimes();
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        errorMessageSorteio.textContent = `Erro ao realizar o sorteio: ${error.message}`;
+      }
+    }
+    
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Página carregada, inicializando...');
+      
+      // Carregar times ao iniciar
+      carregarTimes();
+      
+      // Botão de atualizar times
+      document.getElementById('atualizar-times').addEventListener('click', carregarTimes);
+      
+      // Botão de sortear jogador
+      document.getElementById('sortear-jogador').addEventListener('click', sortearJogador);
+      
+      // Permitir sorteio com Enter
+      document.getElementById('nome-jogador').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          sortearJogador();
+        }
+      });
+      
+      // Atualizar times a cada 30 segundos
+      setInterval(carregarTimes, 30000);
+    });
+  </script>
+</body>
+</html>
